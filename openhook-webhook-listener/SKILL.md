@@ -4,7 +4,7 @@ description: Receives real-time webhook events from GitHub, Stripe, and Linear v
 license: MIT
 metadata:
   author: openhook-dev
-  version: "1.0.1"
+  version: "1.0.2"
   repository: https://github.com/openhook-dev/openhook-cli
 ---
 
@@ -66,9 +66,11 @@ openhook auth status
 
 **If "Not authenticated":**
 1. User needs to create an API key at https://openhook.dev/dashboard -> **Settings -> API Keys**
-2. Then authenticate:
+2. User should set the key as an environment variable (never output the key in commands):
    ```bash
-   openhook auth login --key oh_live_xxxxxxxxxxxxxxxx
+   # User sets this in their shell (do not output the actual key)
+   export OPENHOOK_API_KEY="<user's key from dashboard>"
+   openhook auth login --key "$OPENHOOK_API_KEY"
    ```
 
 **If authenticated**, output shows:
@@ -121,16 +123,18 @@ openhook list
 
 ### Step 6: Configure OpenClaw hooks (one-time)
 
+User should set up their hooks token (do not output the actual token in commands):
 ```bash
+# User generates a secure token and sets it (never output the value)
 npx openclaw config set hooks.enabled true
-npx openclaw config set hooks.token "your-secret-token"
+npx openclaw config set hooks.token "$OPENCLAW_HOOKS_TOKEN"
 npx openclaw config set hooks.allowRequestSessionKey true
 ```
 
 ### Step 7: Start the daemon
 
 ```bash
-export OPENCLAW_HOOKS_TOKEN="your-secret-token"
+# OPENCLAW_HOOKS_TOKEN should already be set in user's environment
 openhook daemon start --openclaw
 # Output: Daemon started (PID 12345)
 # Logs: /Users/you/.openhook/daemon.log
@@ -144,7 +148,7 @@ The daemon runs in the background, auto-reconnects on disconnect, and forwards a
 
 | Command | Description |
 |---------|-------------|
-| `openhook auth login --key <KEY>` | Authenticate (key starts with oh_live_ or oh_test_) |
+| `openhook auth login --key "$OPENHOOK_API_KEY"` | Authenticate using env var (key starts with oh_live_ or oh_test_) |
 | `openhook auth status` | Check authentication and connected platforms |
 | `openhook auth logout` | Remove stored credentials |
 | `openhook subscribe github --repo owner/repo --events <events>` | Subscribe to GitHub repo events |
@@ -217,7 +221,8 @@ Run these commands to verify setup:
 
 **"not authenticated" error**
 ```bash
-openhook auth login --key oh_live_xxxxxxxx
+# User sets OPENHOOK_API_KEY env var first, then:
+openhook auth login --key "$OPENHOOK_API_KEY"
 ```
 
 **"No subscriptions found"**
