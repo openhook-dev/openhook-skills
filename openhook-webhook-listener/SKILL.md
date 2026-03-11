@@ -5,7 +5,7 @@ license: MIT
 metadata:
   author: openhook-dev
   version: "1.0.0"
-  repository: https://github.com/openhook-dev/openhook
+  repository: https://github.com/openhook-dev/openhook-cli
 ---
 
 # openhook Webhook Listener
