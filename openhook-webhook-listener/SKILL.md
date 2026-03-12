@@ -1,10 +1,10 @@
 ---
 name: openhook-webhook-listener
-description: Receives real-time webhook events from GitHub, Stripe, and Linear via the openhook daemon. Use when the user wants to listen for external platform events like pushes, payments, or issue updates and have their AI agent react automatically.
+description: Receives real-time webhook events from GitHub, Stripe, Linear, and Firecrawl via the openhook daemon. Use when the user wants to listen for external platform events like pushes, payments, issue updates, or web scraping results and have their AI agent react automatically.
 license: MIT
 metadata:
   author: openhook-dev
-  version: "1.0.3"
+  version: "1.1.0"
   repository: https://github.com/openhook-dev/openhook-cli
 ---
 
@@ -14,20 +14,21 @@ Receive real-time webhook events from external platforms directly to your AI age
 
 ## Goal
 
-Enable AI agents to react to external events (GitHub pushes, Stripe payments, Linear issues) by running a persistent webhook listener that forwards events to OpenClaw.
+Enable AI agents to react to external events (GitHub pushes, Stripe payments, Linear issues, Firecrawl web scraping) by running a persistent webhook listener that forwards events to OpenClaw.
 
 ## When to use
 
 - User says "listen for GitHub pushes" or "watch for Stripe payments"
-- User wants to react to webhooks from GitHub, Stripe, or Linear
+- User wants to react to webhooks from GitHub, Stripe, Linear, or Firecrawl
 - User asks to monitor external platform events
 - User wants their agent to be notified when something happens externally
+- User wants to receive web scraping results from Firecrawl crawls
 
 ## When NOT to use
 
 - User wants to make a one-time API call (use direct API instead)
 - User wants to poll an endpoint periodically (use cron/scheduled tasks)
-- User needs webhooks from unsupported platforms (only GitHub, Stripe, Linear supported)
+- User needs webhooks from unsupported platforms (only GitHub, Stripe, Linear, Firecrawl supported)
 - User wants to send webhooks outbound (this is for receiving only)
 
 ## Inputs
@@ -110,6 +111,9 @@ openhook subscribe stripe --events payment_intent.succeeded,checkout.session.com
 # Linear - issue events
 openhook subscribe linear --events issue.created,issue.updated
 openhook subscribe linear --team TEAM_ID --events issue.created  # specific team
+
+# Firecrawl - web scraping events
+openhook subscribe firecrawl --events crawl.page,crawl.completed
 ```
 
 Verify:
@@ -155,6 +159,7 @@ The daemon runs in the background, auto-reconnects on disconnect, and forwards a
 | `openhook subscribe stripe --events <events>` | Subscribe to Stripe account events |
 | `openhook subscribe linear --events <events>` | Subscribe to Linear workspace events |
 | `openhook subscribe linear --team <ID> --events <events>` | Subscribe to specific Linear team |
+| `openhook subscribe firecrawl --events <events>` | Subscribe to Firecrawl web scraping events |
 | `openhook list` | List all active subscriptions |
 | `openhook unsubscribe <ID>` | Remove a subscription |
 | `openhook daemon start --openclaw` | Start background daemon with OpenClaw forwarding |
@@ -170,6 +175,7 @@ The daemon runs in the background, auto-reconnects on disconnect, and forwards a
 | GitHub | `push`, `pull_request`, `issues`, `issue_comment`, `workflow_run`, `release`, `create`, `delete` |
 | Stripe | `payment_intent.succeeded`, `payment_intent.failed`, `checkout.session.completed`, `invoice.paid`, `subscription.created`, `subscription.deleted` |
 | Linear | `issue.created`, `issue.updated`, `issue.deleted`, `comment.created`, `comment.updated` |
+| Firecrawl | `crawl.started`, `crawl.page`, `crawl.completed`, `crawl.failed` |
 
 ---
 
