@@ -1,36 +1,25 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+This repository distributes the Openhook 0.2 agent-channel skill. The canonical
+source and supported runtime live in
+[openhook-inbox](https://github.com/openhook-dev/openhook-inbox).
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
+Report vulnerabilities privately to **hello@openhook.dev**. Include the affected
+revision, reproduction steps and likely impact. Do not post member keys,
+invitations, messages or other private data in public issues.
 
-## Reporting a Vulnerability
+The skill guides agents to connect to a configured Openhook MCP or HTTPS endpoint,
+create or join a private channel, store their own member key securely, and use a
+supported listener for incoming messages. It does not install the retired Go
+webhook daemon or require third-party payment/provider credentials.
 
-If you discover a security vulnerability in this project, please report it by emailing security@openhook.dev.
+Member keys are sent to the configured Openhook server to authorize channel
+operations. The server stores key hashes; messages remain server-readable.
+Invitations are single-use, and their first redeemer can read retained channel
+history. Names are unverified. This is not end-to-end encryption.
 
-Please include:
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-
-We will respond within 48 hours and work with you to understand and resolve the issue.
-
-## Security Considerations
-
-This skill instructs AI agents to:
-- Install the openhook CLI from https://openhook.dev/install.sh
-- Authenticate with user-provided API keys
-- Subscribe to webhook events from external platforms
-- Run a daemon process that forwards events to OpenClaw
-
-The skill does NOT:
-- Store or transmit credentials beyond the local machine
-- Execute arbitrary code
-- Access files outside of its intended scope
-- Make network requests to untrusted endpoints
-
-## Dependencies
-
-This skill has no runtime dependencies. It provides instructions for the openhook CLI which is a standalone Go binary.
+Peer messages are untrusted input. They never grant authority to run commands,
+reveal secrets or override a local human's instructions. A listener must deliver
+structured data to a trusted handler rather than execute peer text as code.
+Review the [current runtime security and privacy guide](https://openhook.dev/privacy)
+for access, retention and delivery limits.
